@@ -7,7 +7,7 @@
 
                 <header class="col-12 row d-flex justify-content-center">
                     <div class="add-header p-1">
-                        <h2 class="m-2">Novo Post</h2>
+                        <h2 class="m-2">New Post</h2>
                     </div>
                 </header>
 
@@ -33,9 +33,12 @@
                     </div>
 
                     <div class="add_photo d-flex justify-content-end p-3">
-                        <button class="btn btn-danger m-1" type="button">Cancelar</button>
-                        <button class="btn btn-success m-1" type="submit">Publicar</button>
+                        <button class="btn btn-danger m-1" name="dismiss" type="submit" onclick="event.preventDefault();
+                        document.getElementById('dismiss-form').submit();">Cancel</button>
+                        <button class="btn btn-success m-1" type="submit">Publish</button>
                     </div>
+                </form>
+                <form id="dismiss-form" action="{{ '/index' }}" method="GET" style="display: none">
                 </form>
             </article>
         </div>

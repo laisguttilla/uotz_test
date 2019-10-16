@@ -12,49 +12,38 @@ class UserController extends Controller
 {
 
     public function profile($id){
-        $usuario = User::findOrFail($id);
-        return view('profile')->with('usuario', $usuario);
+        $user = User::findOrFail($id);
+        return view('profile')->with('user', $user);
     }
 
-    public function alterarUsuario(Request $request, $id) {
-        $usuario = User::findOrFail($id);
-
-        dd($usuario);
+    public function updateUser(Request $request, $id) {
+        $user = User::findOrFail($id);
 
         $request->validate([
             'name' => 'required',
             'username' => 'required',
-            'imagem' => 'required',
+            'imagem' => '',
             'email' => 'required',
-            'password' => 'required'
         ]);
-   
-        $usuario->name = $request->input('name');
-        $usuario->username = $request->input('username');
-        $usuario->email = $request->input('email');
-       
+
         $request = request();
+   
+        $user->name = $request->input('name');
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
 
-        $arquivo = $request->file('imagem');
+        if ($request->hasfile('imagem')){
+            $arquivo = $request->file('imagem')->store('uploads_perfil');
+        } else {
+            $arquivo = $user->imagem;
+        }
 
-        $nomePasta = "uploads_perfil";
-        $arquivo->storePublicly($nomePasta);
-
-        $caminhoAbsoluto = public_path() . "/storage/$nomePasta";
-
-        $nomeArquivo = $arquivo->getClientOriginalName();
-
-        $caminhoRelativo = "storage/$nomePasta/$nomeArquivo";
-
-        $arquivo->move($caminhoAbsoluto, $nomeArquivo);
-
-        $usuario->save();
-
+        $user->save();
 
         return redirect('/index');
     }
 
-    function deletarUsuario() {
+    function deleteUser() {
         $user = Auth::user();
 
         $user->delete();

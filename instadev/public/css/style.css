@@ -53,6 +53,7 @@ a:hover {
 
 .add-icon {
     float: right;
+    margin-top: 60px;
 }
 
 .add-photo>input {

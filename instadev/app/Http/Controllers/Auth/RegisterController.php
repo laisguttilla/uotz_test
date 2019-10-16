@@ -70,30 +70,14 @@ class RegisterController extends Controller
 
         $request = request();
 
-        $arquivo = $request->file('imagem');
-        
-        $nomePasta = "uploads_perfil";
-        // capturando o caminho até o projeto
-        $arquivo->storePublicly($nomePasta);
-
-        // caminho absoluto que sempre será utilizado o mesmo
-        $caminhoAbsoluto = public_path() . "/storage/$nomePasta";
-
-        // capturando o tmp_name
-        $nomeArquivo = $arquivo->getClientOriginalName();
-
-        // capturando o caminho relativo dentro do projeto
-        $caminhoRelativo = "storage/$nomePasta/$nomeArquivo";
-
-        // movendo/armazenando imagem dentro do projeto
-        $arquivo->move($caminhoAbsoluto, $nomeArquivo);
+        $arquivo = $request->file('imagem')->store('uploads_perfil');
 
         $user = User::create([
             'name' => $data['name'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'imagem' => $caminhoRelativo,
+            'imagem' => $arquivo
         ]);
 
         return $user;

@@ -7,6 +7,7 @@ use App\Post;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
@@ -17,14 +18,14 @@ class PostsController extends Controller
     }
 
     //pagina criando post
-    public function adicionandoPost(){
-        $usuario = Auth::user();
-        $usuarios = User::all();
+    public function addPost(){
+        $user = Auth::user();
+        $users = User::all();
         return view('add_post', compact('usuario','usuarios'));
     }
 
     //salvando e validando o post na pagina criando post
-    public function salvandoPost(Request $request){
+    public function savePost(Request $request){
 
         $request->validate([
             "descricao" => 'required',
@@ -32,24 +33,11 @@ class PostsController extends Controller
         ]);
 
         // salvando caminho da imagem e armazenando-a no projeto
-        // capturando imagem selecionada pelo usuário
-        $arquivo = $request->file('imagem');
-       
-        $nomePasta = "uploads";
-        // capturando o caminho até o projeto
-        $arquivo->storePublicly($nomePasta);
-        // caminho absoluto que sempre será utilizado o mesmo
-        $caminhoAbsoluto = public_path() . "/storage/$nomePasta";
-        // capturando o tmp_name
-        $nomeArquivo = $arquivo->getClientOriginalName();
-        // capturando o caminho relativo dentro do projeto
-        $caminhoRelativo = "storage/$nomePasta/$nomeArquivo";
-        // movendo/armazenando imagem dentro do projeto
-        $arquivo->move($caminhoAbsoluto, $nomeArquivo);
+        $arquivo = $request->file('imagem')->store('uploads');
 
         // criando o post
         $posts = Post::create([
-            "imagem" =>$caminhoRelativo,
+            "imagem" =>$arquivo,
             "descricao" => $request->input("descricao"),
             "tags"=> $request->input("tags"),
             "user_id"=> $request->input("user_id") 
@@ -60,33 +48,32 @@ class PostsController extends Controller
         return redirect('/index');
     }
 
+    //mostrar o post para alterar por id
+    public function showPost($id) {
+        $post = Post::findOrFail($id);
+        return view('edit_post', compact('post'));
+    }
+
     //validando os dados do post pelo banco e editando o post
-    public function alterarPost(Request $request, $id) {
+    public function updatePost(Request $request, $id) {
         $post = Post::findOrFail($id);
 
         $request->validate([
             'descricao' => 'required',
             'tags' => 'required',
             'user_id' => 'required',
-            'imagem' => 'required'
+            'imagem' => ''
         ]);
-   
+
         $post->descricao = $request->input('descricao');
         $post->tags = $request->input('tags');
-        $post->tags = $request->input('user_id');
+        $post->user_id = $request->input('user_id');
 
-        $arquivo = $request->file('imagem');
-
-        $nomePasta = "uploads";
-        $arquivo->storePublicly($nomePasta);
-
-        $caminhoAbsoluto = public_path() . "/storage/$nomePasta";
-
-        $nomeArquivo = $arquivo->getClientOriginalName();
-
-        $caminhoRelativo = "storage/$nomePasta/$nomeArquivo";
-
-        $arquivo->move($caminhoAbsoluto, $nomeArquivo);
+        if ($request->hasfile('imagem')){
+            $arquivo = $request->file('imagem')->store('uploads');
+        } else {
+            $arquivo = $post->imagem;
+        }
 
         $post->save();
 
@@ -94,10 +81,10 @@ class PostsController extends Controller
     }
 
     //deletar
-    function deletarPost($id) {
+    function deletePost($id) {
         $post = Post::find($id);
 
-        $post->delete();
+        $post->delete($id);
 
         return redirect('/index');
     }

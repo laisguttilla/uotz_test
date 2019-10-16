@@ -11,6 +11,9 @@
 |
 */
 
+Route::redirect('/', '/login');
+Route::redirect('/logout', '/login');
+
 Auth::routes();
 
 Route::middleware(['auth'])->group(function(){
@@ -19,14 +22,15 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/index', 'PostsController@posts');
 
     // crud posts
-    Route::get('/add_post', 'PostsController@adicionandoPost');
-    Route::post('/add_post', 'PostsController@salvandoPost');
-    Route::put('/edit_post/{id}', 'PostsController@alterarPost')->name('editpost');
-    Route::delete('/edit_post/{id}', 'PostsController@deletarPost');
+    Route::get('/add_post', 'PostsController@addPost');
+    Route::post('/add_post', 'PostsController@savePost');
+    Route::get('edit_post/{id}', 'PostsController@showPost')->name('showpost');
+    Route::put('/edit_post/{id}', 'PostsController@updatePost')->name('editpost');
+    Route::delete('/edit_post/{id}', 'PostsController@deletePost')->name('remove');
 
     //crud usuario
     Route::get('/profile/{id}', 'UserController@profile');
-    Route::put('/profile/{id}', 'UserController@alterarUsuario');
-    Route::delete('/index', 'UserController@deletarUsuario')->name('delete');
+    Route::put('/profile/{id}', 'UserController@updateUser')->name('editprofile');
+    Route::delete('/index', 'UserController@deleteUser')->name('delete');
 
 });

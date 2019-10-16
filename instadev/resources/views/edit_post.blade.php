@@ -11,19 +11,19 @@
                     </div>
                 </header>
 
-                <form method="post" class="mt-5" action= "{{ route('editpost',['id'=>$post->id]) }}" enctype="application/x-www-form-urlencoded">
+                <form method="post" class="mt-2" action= "{{ route('editpost',['id'=>$post->id]) }}" enctype="application/x-www-form-urlencoded">
                     
                     @csrf
                     {{ method_field('PUT') }}
 
-                    <div class="add-photo form-group d-flex justify-content-center p-5">
+                    <div class="add-photo form-group d-flex justify-content-center">
                         <label for="file-input">
-                            <img src="{{ url($post->imagem) }}" alt="imagem do post">
+                            <img class="img-fluid" src="{{ url($post->imagem) }}" alt="imagem do post">
                         </label>
-                        <input id="file-input" name="imagem" type="file">
+                        <input id="file-input" name="imagem" type="file" value="{{ $post->imagem }}">
                     </div>
 
-                    <input type="hidden" name="user_id" value="{{$post->id}}">
+                    <input type="hidden" name="user_id" value="{{$post->user_id}}">
 
                     <div class="add-input form-group mt-2">
                         <input class="col-12 p-1" name="descricao" type="text" placeholder="Descrição" value="{{ $post->descricao }}">
@@ -34,16 +34,17 @@
                     </div>
 
                     <div class="add_photo d-flex justify-content-end p-3">
-                        <button class="btn btn-success m-1" type="submit">Publicar</button>
+                        <button class="btn btn-success m-1" type="submit">Publish</button>
+                        <button class="btn btn-danger m-1" name="remover" type="submit" onclick="event.preventDefault();
+                        document.getElementById('remove-form').submit();">Delete</button>
                     </div>
                 </form>
-                    <div class="d-flex justify-content-end p-3">
-                        <form action="/filmes/remover/{{ $post->id }}" method="POST">
+                <div class="add_photo d-flex justify-content-end p-3">
+                    <form id="remove-form" action="{{ route('remove', ['id'=>$post->id]) }}" method="POST">
                         @csrf
                         {{ method_field('DELETE') }}
-                            <button type="submit" class="btn btn-danger">Excluir</button>
-                        </form>
-                    </div>
+                    </form>
+                </div>
             </article>
         </div>
     </section>

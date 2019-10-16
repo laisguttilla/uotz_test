@@ -17,14 +17,14 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ url('/edit_post/' .$post->id) }}">
-                                Editar
+                                Edit
                             </a>
                         </div>
                         @endif
                         
                     </header>
                     <div class="imagem-feed">
-                        <img class="w-100" src="{{ $post->imagem }}" alt="">
+                        <img class="w-100" src="{{ url($post->imagem) }}" alt="post image">
                     </div>
                     <div class="text-feed mt-2 mb-1">
                         <p>{{ $post->descricao }}</p>
@@ -33,7 +33,7 @@
                     <div class="likes-feed">
                         <i class="far fa-heart fa-lg"></i>
                         <i class="far fa-comment fa-lg"></i>
-                        <span>curtido por 100 pessoas</span>
+                        <span>liked by 100 people</span>
                     </div>
                     <div class="feed-time p-1">
                         <p>{{ $post->created_at->diffForHumans() }}</p>
@@ -41,11 +41,10 @@
                 </div>
                 @endforeach
             </article>
+            <div class="add-icon d-flex justify-content-end p-3">
+                <a href="/add_post"><i class="fas fa-plus-circle fa-3x"></i></a>
+            </div>
         </div>
 
-        <div class="add-icon d-flex justify-content-end p-3">
-            <a href="/add_post"><i class="fas fa-plus-circle fa-3x"></i></a>
-        </div>
-        
     </section>
 @endsection
