@@ -20,7 +20,7 @@ XAMP 7.3 or MAMP 5.5
 
 1. On your desktop clone this repo through your terminal: git clone [link]
 2. Cd into the directory: cd instadev
-3. Run composer install in case you do't have Laravel: composer global require laravel/installer
+3. Run composer install in case you don't have Laravel: composer global require laravel/installer
 4. Run: php artisan key:generate
 5. Set up your .env file with the correct data: change your DB_PORT, DB_DATABASE, DB_USERNAME and DB_PASSWOR to your current settings.
 6. Create a database in your MySQL named instadev.
